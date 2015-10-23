@@ -41,19 +41,10 @@ NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'sheerun/vim-polyglot'
-NeoBundle 'vim-scripts/grep.vim'
 NeoBundle 'vim-scripts/CSApprox'
 NeoBundle 'bronson/vim-trailing-whitespace'
-NeoBundle 'Shougo/vimproc.vim', {
-      \ 'build' : {
-      \     'windows' : 'tools\\update-dll-mingw',
-      \     'cygwin' : 'make -f make_cygwin.mak',
-      \     'mac' : 'make -f make_mac.mak',
-      \     'unix' : 'make -f make_unix.mak',
-      \    },
-      \ }
 if v:version > 702
-	NeoBundle 'Shougo/vimshell.vim'
+  NeoBundle 'Shougo/vimshell.vim'
 endif
 
 "" Vim-Session
@@ -84,13 +75,13 @@ NeoBundle "majutsushi/tagbar"
 
 " Greg's added bundles
 NeoBundle 'schickling/vim-bufonly'
-NeoBundle 'mileszs/ack.vim'
 NeoBundle 'tpope/vim-sleuth'
+NeoBundle 'rking/ag.vim'
 
 "" Include user's extra bundle
-if filereadable(expand("~/.vimrc.local.bundles"))
-  source ~/.vimrc.local.bundles
-endif
+"if filereadable(expand("~/.vimrc.local.bundles"))
+"  source ~/.vimrc.local.bundles
+"endif
 
 call neobundle#end()
 
@@ -220,7 +211,7 @@ let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 
 if !exists('g:airline_symbols')
-	let g:airline_symbols = {}
+  let g:airline_symbols = {}
 endif
 
 if !exists('g:airline_powerline_fonts')
@@ -256,7 +247,7 @@ cnoreabbrev Qall qall
 
 "" NERDTree configuration
 let g:NERDTreeChDirMode=2
-let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__']
+let g:NERDTreeIgnore=['\.rbc$', '\~$', '\.pyc$', '\.db$', '\.sqlite$', '__pycache__', '\.o$']
 let g:NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\.bak$', '\~$']
 let g:NERDTreeShowBookmarks=1
 let g:nerdtree_tabs_focus_on_files=1
@@ -265,10 +256,6 @@ let g:NERDTreeWinSize = 32
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.pyc,*.db,*.sqlite
 nnoremap <silent> <F2> :NERDTreeFind<CR>
 noremap <F3> :NERDTreeToggle<CR>
-
-" grep.vim
-nnoremap <silent> <leader>f :Rgrep<CR>
-let Grep_Default_Options = '-IR'
 
 " vimshell.vim
 let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
@@ -376,7 +363,6 @@ let g:syntastic_style_warning_symbol = '⚠'
 let g:syntastic_auto_loc_list=1
 let g:syntastic_aggregate_errors = 1
 
-
 "" Copy/Paste/Cut
 if has('unnamedplus')
   set clipboard=unnamed,unnamedplus
@@ -392,9 +378,6 @@ if has('macunix')
   vmap <C-c> :w !pbcopy<CR><CR>
 endif
 
-"" Buffer nav
-noremap <leader>q :bp<CR>
-noremap <leader>w :bn<CR>
 
 "" Close buffer
 noremap <leader>c :bd<CR>
@@ -420,15 +403,15 @@ nmap <silent> <F4> :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 
 let g:tagbar_type_ruby = {
-    \ 'kinds' : [
-        \ 'm:modules',
-        \ 'c:classes',
-        \ 'd:describes',
-        \ 'C:contexts',
-        \ 'f:methods',
-        \ 'F:singleton methods'
-    \ ]
-\ }
+      \ 'kinds' : [
+      \ 'm:modules',
+      \ 'c:classes',
+      \ 'd:describes',
+      \ 'C:contexts',
+      \ 'f:methods',
+      \ 'F:singleton methods'
+      \ ]
+      \ }
 
 
 
@@ -437,17 +420,11 @@ if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
 
-""Disable arrow keys to encourage vim style navigation
+" Disable arrow keys to encourage vim style navigation
 noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
-
-" The previous tab stuff was not being used correctly, so this is hardcoded
-" here
-set tabstop=2
-set shiftwidth=2
-set expandtab
 
 " Open nerd tree with hotkey
 nmap <leader>nt :NERDTree<cr>
@@ -468,9 +445,6 @@ set splitright
 set list
 set listchars=tab:▸\ 
 
-" ignore build artifacts in nerd tree
-let NERDTreeIgnore = ['\.o$']
-
 " change cmdline to match bash shell
 cnoremap <C-P> <Up>
 cnoremap <C-N> <Down>
@@ -482,4 +456,21 @@ cnoremap <Esc>f <S-Right>
 
 set updatetime=500
 
-execute pathogen#infect()
+" Quicker quit commands
+noremap qq :q<CR>
+noremap QQ :qa<CR>
+
+noremap q <NOP>
+
+" Save things more quickly
+noremap <leader>w :redraw!<CR>:w<CR>
+
+
+if &diff
+  "setup vimdiff
+else
+  "setup non-vimdiff
+  if 0 == argc()
+    au VimEnter * NERDTree
+  endif
+endif
